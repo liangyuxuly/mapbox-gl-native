@@ -313,7 +313,7 @@ void QMapboxGLSettings::setViewportMode(ViewportMode mode)
 
     By default, it is set to 50 MB.
 */
-unsigned QMapboxGLSettings::cacheDatabaseMaximumSize() const
+uint64_t QMapboxGLSettings::cacheDatabaseMaximumSize() const
 {
     return m_cacheMaximumSize;
 }
@@ -321,7 +321,7 @@ unsigned QMapboxGLSettings::cacheDatabaseMaximumSize() const
 /*!
     Returns the maximum allowed cache database \a size in bytes.
 */
-void QMapboxGLSettings::setCacheDatabaseMaximumSize(unsigned size)
+void QMapboxGLSettings::setCacheDatabaseMaximumSize(const uint64_t &size)
 {
     m_cacheMaximumSize = size;
 }

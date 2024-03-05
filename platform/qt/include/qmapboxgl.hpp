@@ -54,8 +54,8 @@ public:
     ViewportMode viewportMode() const;
     void setViewportMode(ViewportMode);
 
-    unsigned cacheDatabaseMaximumSize() const;
-    void setCacheDatabaseMaximumSize(unsigned);
+    uint64_t cacheDatabaseMaximumSize() const;
+    void setCacheDatabaseMaximumSize(const uint64_t &);
 
     QString cacheDatabasePath() const;
     void setCacheDatabasePath(const QString &);
@@ -81,7 +81,7 @@ private:
     ConstrainMode m_constrainMode;
     ViewportMode m_viewportMode;
 
-    unsigned m_cacheMaximumSize;
+    uint64_t m_cacheMaximumSize;
     QString m_cacheDatabasePath;
     QString m_assetPath;
     QString m_accessToken;

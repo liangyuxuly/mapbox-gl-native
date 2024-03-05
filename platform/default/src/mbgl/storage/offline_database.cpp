@@ -12,8 +12,8 @@
 
 namespace mbgl {
 
-OfflineDatabase::OfflineDatabase(std::string path_)
-    : path(std::move(path_)) {
+OfflineDatabase::OfflineDatabase(std::string path_, uint64_t max_cache_size_ = util::DEFAULT_MAX_CACHE_SIZE)
+    : path(std::move(path_)), maximumAmbientCacheSize(std::move(max_cache_size_)) {
     try {
         initialize();
     } catch (...) {

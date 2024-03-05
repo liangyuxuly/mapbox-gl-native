@@ -37,7 +37,7 @@ struct MapboxTileLimitExceededException :  util::Exception {
 
 class OfflineDatabase {
 public:
-    OfflineDatabase(std::string path);
+    OfflineDatabase(std::string path, uint64_t maxCacheSize);
     ~OfflineDatabase();
 
     void changePath(const std::string&);

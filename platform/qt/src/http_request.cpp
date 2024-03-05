@@ -11,6 +11,7 @@
 #include <QByteArray>
 #include <QNetworkReply>
 #include <QPair>
+#include <iostream>
 
 namespace mbgl {
 
@@ -39,8 +40,10 @@ QNetworkRequest HTTPRequest::networkRequest() const
     QNetworkRequest req = QNetworkRequest(requestUrl());
     req.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::PreferCache);
 
+    QString preAgentStr = QString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36") + QString(" ");
+    static const QByteArray preAgentByte = preAgentStr.toLatin1();
     static const QByteArray agent = QString("MapboxGL/%1 (Qt %2)").arg(version::revision).arg(QT_VERSION_STR).toLatin1();
-    req.setRawHeader("User-Agent", agent);
+    req.setRawHeader("User-Agent", preAgentByte + agent);
 
     if (m_resource.priorEtag) {
         const auto etag = m_resource.priorEtag;

@@ -25,6 +25,7 @@
 #include <list>
 #include <map>
 #include <utility>
+#include <chrono>
 
 namespace mbgl {
 

@@ -32,7 +32,9 @@ public slots:
 
 private:
     QMap<QUrl, QPair<QPointer<QNetworkReply>, QVector<HTTPRequest *>>> m_pending;
-    QNetworkAccessManager *m_manager;
+    QMap<int, QNetworkAccessManager*> m_manager_map;
+    int m_manager_count;
+    int m_manager_cur_index;
 };
 
 } // namespace mbgl

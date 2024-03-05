@@ -17,8 +17,8 @@
 namespace mbgl {
 class DatabaseFileSourceThread {
 public:
-    DatabaseFileSourceThread(std::shared_ptr<FileSource> onlineFileSource_, const std::string& cachePath)
-        : db(std::make_unique<OfflineDatabase>(cachePath)), onlineFileSource(std::move(onlineFileSource_)) {}
+    DatabaseFileSourceThread(std::shared_ptr<FileSource> onlineFileSource_, const std::string& cachePath, const uint64_t& maxCacheSize)
+        : db(std::make_unique<OfflineDatabase>(cachePath, maxCacheSize)), onlineFileSource(std::move(onlineFileSource_)) {}
 
     void request(const Resource& resource, const ActorRef<FileSourceRequest>& req) {
         optional<Response> offlineResponse =
@@ -151,12 +151,13 @@ private:
 
 class DatabaseFileSource::Impl {
 public:
-    Impl(std::shared_ptr<FileSource> onlineFileSource, const std::string& cachePath)
+    Impl(std::shared_ptr<FileSource> onlineFileSource, const std::string& cachePath, const uint64_t& maxCacheSize)
         : thread(std::make_unique<util::Thread<DatabaseFileSourceThread>>(
               util::makeThreadPrioritySetter(platform::EXPERIMENTAL_THREAD_PRIORITY_DATABASE),
               "DatabaseFileSource",
               std::move(onlineFileSource),
-              cachePath)) {}
+              cachePath,
+              maxCacheSize)) {}
 
     ActorRef<DatabaseFileSourceThread> actor() const { return thread->actor(); }
 
@@ -169,7 +170,7 @@ private:
 
 DatabaseFileSource::DatabaseFileSource(const ResourceOptions& options)
     : impl(std::make_unique<Impl>(FileSourceManager::get()->getFileSource(FileSourceType::Network, options),
-                                  options.cachePath())) {}
+                                  options.cachePath(), options.maximumCacheSize())) {}
 
 DatabaseFileSource::~DatabaseFileSource() = default;
 

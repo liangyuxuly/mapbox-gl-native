@@ -60,7 +60,7 @@ const std::string& ResourceOptions::assetPath() const {
 }
 
 ResourceOptions& ResourceOptions::withMaximumCacheSize(uint64_t size) {
-    impl_->maximumSize = size;
+    impl_->maximumSize = std::move(size);
     return *this;
 }
 

@@ -8,12 +8,21 @@
 #include <QNetworkProxyFactory>
 #include <QNetworkReply>
 #include <QSslConfiguration>
+#include <QNetworkConfiguration>
+#include <QNetworkSession>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <functional>
 
 namespace mbgl {
 
-HTTPFileSource::Impl::Impl() : m_manager(new QNetworkAccessManager(this))
+HTTPFileSource::Impl::Impl() : m_manager_count(25), m_manager_cur_index(0)
 {
     QNetworkProxyFactory::setUseSystemConfiguration(true);
+    for (int i = 0; i < m_manager_count; i++) {
+        m_manager_map[i] = new QNetworkAccessManager(this);
+    }
 }
 
 void HTTPFileSource::Impl::request(HTTPRequest* req)
@@ -31,7 +40,9 @@ void HTTPFileSource::Impl::request(HTTPRequest* req)
     QNetworkRequest networkRequest = req->networkRequest();
     networkRequest.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
 
-    data.first = m_manager->get(networkRequest);
+    m_manager_cur_index = (m_manager_cur_index + 1) % m_manager_count;
+    data.first = m_manager_map[m_manager_cur_index]->get(networkRequest);
+
     connect(data.first, SIGNAL(finished()), this, SLOT(onReplyFinished()));
     connect(data.first, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onReplyFinished()));
 }
